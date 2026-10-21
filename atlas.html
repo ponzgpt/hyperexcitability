@@ -1,0 +1,1083 @@
+<title>Muscle Hyperexcitability Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: light EMG-paper page; sticky ontology index on the left, one airy reading column; nerve = cobalt, muscle = oxblood, boundary = ochre */
+:root{
+  color-scheme:light;
+  --paper:#FBFBF8; --sheet:#FFFFFF; --wash:#F3F5F1; --ink:#1A2320; --muted:#5D6964; --faint:#8C9691; --rule:#E3E7E2; --grid:#EEF1EC;
+  --nerve:#2446C7; --nerve-soft:#EBEFFC; --muscle:#A3303A; --muscle-soft:#F8EAEA; --bound:#8A6D1F; --bound-soft:#F6F0DE;
+  --ok:#2E7D4F; --ok-soft:#E6F3EB; --bad:#B3261E; --bad-soft:#FBE9E7;
+  --f-display:"Familjen Grotesk","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:18px;line-height:1.7;
+  padding-left:max(20px, env(safe-area-inset-left, 0px));padding-right:max(20px, env(safe-area-inset-right, 0px));padding-block:0 96px}
+h1,h2,h3,h4{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+h1{font-size:clamp(36px,6vw,58px);font-weight:700;letter-spacing:-.02em}
+h2{font-size:clamp(28px,3.6vw,36px);font-weight:700;letter-spacing:-.01em}
+h3{font-size:25px;font-weight:600}
+h4{font-size:18px;font-weight:600}
+p{margin:0;max-width:64ch}
+a{color:var(--nerve)}
+a:focus-visible,button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--nerve);outline-offset:2px}
+ul{margin:0;padding-left:1.1em;display:grid;gap:.55em;max-width:62ch}
+li{padding-left:.15em}
+li::marker{color:var(--faint)}
+b{font-weight:600}
+.mono{font-family:var(--f-mono);font-size:.84em}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.muted{color:var(--muted)}
+.nerve{color:var(--nerve)} .muscle{color:var(--muscle)} .bound{color:var(--bound)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;white-space:nowrap;vertical-align:middle}
+.tag.n{background:var(--nerve-soft);color:var(--nerve)} .tag.m{background:var(--muscle-soft);color:var(--muscle)} .tag.x{background:var(--bound-soft);color:var(--bound)}
+.t{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-decoration:none;white-space:nowrap;border-bottom:1px dotted var(--faint)}
+.t:hover{color:var(--nerve);border-color:var(--nerve)}
+.bg{font-family:var(--f-mono);font-size:10px;color:var(--bound);background:var(--bound-soft);border-radius:2px;padding:0 4px;margin-left:4px;vertical-align:2px;cursor:help}
+
+/* shell */
+.shell{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:200px minmax(0,1fr);gap:64px}
+aside.idx{position:sticky;top:calc(env(safe-area-inset-top, 0px) + 28px);align-self:start;padding-top:56px;display:grid;gap:18px;font-size:14px}
+aside.idx .grp{display:grid;gap:2px}
+aside.idx .grp > span{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--faint);margin-bottom:4px}
+aside.idx a{text-decoration:none;color:var(--muted);font-family:var(--f-display);padding:3px 0 3px 12px;border-left:2px solid var(--rule);line-height:1.35}
+aside.idx a:hover{color:var(--ink)}
+aside.idx a.on{color:var(--ink);border-color:var(--ink)}
+aside.idx a.n.on{border-color:var(--nerve)} aside.idx a.m.on{border-color:var(--muscle)}
+main{min-width:0;max-width:820px}
+nav.chips{display:none}
+@media (max-width:980px){
+  .shell{grid-template-columns:1fr;gap:0}
+  aside.idx{display:none}
+  nav.chips{display:flex;position:sticky;top:env(safe-area-inset-top, 0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);gap:4px;overflow-x:auto;scrollbar-width:none;padding-block:10px}
+  nav.chips::-webkit-scrollbar{display:none}
+  nav.chips a{font-family:var(--f-mono);font-size:12px;text-decoration:none;color:var(--muted);padding:5px 10px;border-radius:4px;white-space:nowrap}
+}
+
+/* hero */
+header.hero{padding-block:56px 40px;display:grid;gap:22px}
+.trace-hero{width:100%;height:64px;display:block}
+.trace-hero path{fill:none;stroke:var(--muscle);stroke-width:1.4}
+.trace-hero line{stroke:var(--rule)}
+.lede{font-size:clamp(20px,2.4vw,23px);line-height:1.55;max-width:38em}
+.src{display:flex;flex-wrap:wrap;gap:6px 20px;font-family:var(--f-mono);font-size:12.5px;color:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:10px 22px;font-size:14.5px;color:var(--muted);padding:14px 0;border-block:1px solid var(--rule)}
+.legend span{display:flex;align-items:center;gap:8px}
+
+/* sections */
+section{padding-block:72px 8px;display:grid;gap:32px;scroll-margin-top:64px}
+.part{padding-top:96px;display:grid;gap:10px;scroll-margin-top:64px}
+.part .num{font-family:var(--f-mono);font-size:13px;color:var(--faint)}
+.part h2{font-size:clamp(32px,4.4vw,44px)}
+.part p{color:var(--muted);font-size:19px}
+.sec-head{display:grid;gap:12px}
+.sec-head p{color:var(--muted)}
+.explain{display:grid;gap:14px}
+.callout{background:var(--wash);border-radius:8px;padding:20px 22px;display:grid;gap:10px}
+.k{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* thesis list */
+.thesis{list-style:none;padding:0;display:grid;gap:0;max-width:none;counter-reset:th}
+.thesis li{display:grid;grid-template-columns:44px minmax(0,1fr);gap:8px;padding:18px 0;border-top:1px solid var(--rule)}
+.thesis li::before{counter-increment:th;content:counter(th);font-family:var(--f-mono);font-size:13px;color:var(--faint);padding-top:4px}
+.thesis b{font-family:var(--f-display);font-size:19px;display:block}
+
+/* facets: the fixed ontology of every entity */
+.entity{display:grid;gap:28px;padding-top:24px}
+.entity-head{display:flex;gap:12px 16px;align-items:baseline;flex-wrap:wrap}
+.entity-head .t{margin-left:auto}
+.def{font-size:21px;line-height:1.5;max-width:36em}
+.facets{margin:0;display:grid}
+.facets > div{display:grid;grid-template-columns:140px minmax(0,1fr);gap:24px;padding:18px 0;border-top:1px solid var(--rule)}
+.facets dt{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding-top:5px}
+.facets dd{margin:0;min-width:0}
+@media (max-width:600px){.facets > div{grid-template-columns:1fr;gap:6px}}
+
+/* widgets */
+.widget{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:22px;display:grid;gap:16px;min-width:0}
+.widget .w-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.widget .w-head h4{font-size:16px}
+.widget .cap{font-size:15px;color:var(--muted);line-height:1.55}
+.btns{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{font-family:var(--f-mono);font-size:12.5px;background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:5px;padding:8px 13px;cursor:pointer;line-height:1.2}
+.btn:hover{border-color:var(--ink)}
+.btn.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.btn.sel{border-color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink)}
+.scroll-x{overflow-x:auto}
+svg text{font-family:var(--f-mono)}
+input[type=range]{width:100%;accent-color:var(--ink)}
+
+/* emg trace */
+.emg{position:relative;min-width:0}
+.emg canvas{width:100%;display:block;background:var(--sheet);border:1px solid var(--rule);border-radius:6px;cursor:pointer}
+.emg .play{position:absolute;right:8px;top:8px;font-family:var(--f-mono);font-size:11px;background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:4px;padding:3px 9px;cursor:pointer}
+.emg-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media (max-width:640px){.emg-pair{grid-template-columns:1fr}}
+.emg-pair > div{display:grid;gap:6px;min-width:0}
+.lbl{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+
+/* origin map */
+.node{cursor:pointer}
+.node rect{fill:var(--sheet);stroke-width:1.3;transition:fill .15s}
+.node.n rect{stroke:var(--nerve)} .node.m rect{stroke:var(--muscle)} .node.x rect{stroke:var(--bound)}
+.node text{font-size:11px;fill:var(--ink);text-anchor:middle}
+.node .num{font-size:10px;fill:var(--faint)}
+.node.on rect{stroke-width:2.6}
+.node.n.on rect{fill:var(--nerve-soft)} .node.m.on rect{fill:var(--muscle-soft)} .node.x.on rect{fill:var(--bound-soft)}
+.wire{stroke:var(--faint);stroke-width:1.2;fill:none}
+.origin-detail{display:grid;gap:10px;border-left:3px solid var(--rule);padding-left:18px;min-height:150px}
+.origin-detail.n{border-color:var(--nerve)} .origin-detail.m{border-color:var(--muscle)} .origin-detail.x{border-color:var(--bound)}
+
+/* three-layer graph */
+.layers{position:relative}
+.layers svg.links{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.layers svg.links path{fill:none;stroke:var(--rule);stroke-width:1.2;transition:stroke .2s,opacity .2s}
+.layers svg.links path.hot{stroke:var(--ink);stroke-width:1.8}
+.layers.focus svg.links path:not(.hot){opacity:.25}
+.lcols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:56px;position:relative}
+.lcol{display:grid;gap:8px;align-content:start}
+.lcol > .k{margin-bottom:6px}
+.chip{font-family:var(--f-display);font-size:14.5px;line-height:1.3;text-align:left;background:var(--sheet);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:8px 10px;cursor:pointer;position:relative;z-index:1;transition:opacity .2s,border-color .2s,background .2s}
+.chip.n{border-left:3px solid var(--nerve)} .chip.m{border-left:3px solid var(--muscle)} .chip.x{border-left:3px solid var(--bound)}
+.layers.focus .chip:not(.hot){opacity:.35}
+.chip.hot{border-color:var(--ink)}
+.chip.sel{background:var(--wash)}
+@media (max-width:720px){.lcols{grid-template-columns:1fr;gap:22px}.layers svg.links{display:none}}
+
+/* ecc */
+.ecc{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:26px;align-items:start}
+@media (max-width:760px){.ecc{grid-template-columns:1fr}}
+.ecc svg{width:100%;height:auto;display:block}
+.ecc .l{font-size:10.5px;fill:var(--muted)}
+.ecc .memb{stroke:var(--ink);stroke-width:2;fill:none}
+.ecc .sr{fill:var(--wash);stroke:var(--faint);stroke-width:1.2}
+.ecc .act{stroke:var(--faint);stroke-width:3}
+.ecc .myo{stroke:var(--ink);stroke-width:5;stroke-linecap:round}
+.ecc .hl{opacity:0;transition:opacity .3s;fill:none;stroke:var(--bound);stroke-width:2.2;stroke-dasharray:4 3}
+.ecc .ca circle{fill:var(--muscle)}
+.ecc .ca{transition:transform 1s cubic-bezier(.5,0,.3,1)}
+.ecc .ap{fill:var(--nerve);opacity:0;transition:opacity .3s}
+.ecc .xb{stroke:var(--muscle);stroke-width:1.6;opacity:0;transition:opacity .4s}
+.ecc[data-step="1"] .ap1,.ecc[data-step="2"] .ap2,.ecc[data-step="3"] .ap3{opacity:1}
+.ecc[data-step="3"] .hl-dhpr,.ecc[data-step="4"] .hl-dhpr,.ecc[data-step="4"] .hl-ryr{opacity:1}
+.ecc[data-step="4"] .ca,.ecc[data-step="5"] .ca,.ecc[data-step="6"] .ca{transform:translate(0,96px)}
+.ecc[data-step="5"] .xb{opacity:1} .ecc[data-step="6"] .xb{opacity:.35}
+.ecc[data-step="6"] .hl-atp,.ecc[data-step="7"] .hl-serca{opacity:1}
+.step-card{display:grid;gap:10px;min-height:210px}
+.step-card .breaks{border-top:1px solid var(--rule);padding-top:10px;font-size:16px}
+.dots{display:flex;gap:5px}
+.dots span{width:20px;height:4px;border-radius:2px;background:var(--rule)}
+.dots span.on{background:var(--ink)}
+
+/* ruler */
+.ruler-detail{min-height:96px;display:grid;gap:8px;font-size:16px}
+.band{cursor:pointer}
+.band.on rect{stroke-width:2.4}
+
+/* tables */
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:16px;min-width:540px}
+th,td{text-align:left;vertical-align:top;padding:12px 16px 12px 0;border-bottom:1px solid var(--rule);line-height:1.5}
+th{font-family:var(--f-mono);font-size:11.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+td:first-child{font-family:var(--f-display);font-weight:600;white-space:nowrap}
+
+/* sorter */
+.sort{display:grid;gap:8px}
+.sort-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px;border:1px solid var(--rule);border-radius:6px;font-size:16px}
+.sort-row.ok{background:var(--ok-soft);border-color:var(--ok)}
+.sort-row.no{background:var(--bad-soft);border-color:var(--bad)}
+.sort-row .btn{padding:5px 10px}
+
+.muscle-svg{width:100%;height:auto;display:block}
+.status{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);min-height:1.4em;line-height:1.5}
+
+/* meter */
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px 18px}
+@media (max-width:600px){.checks{grid-template-columns:1fr}}
+.checks label{display:flex;gap:10px;align-items:flex-start;font-size:15.5px;line-height:1.45;cursor:pointer}
+.checks input{margin-top:4px;accent-color:var(--ink)}
+.meter{position:relative;height:12px;border-radius:6px;background:linear-gradient(90deg,var(--ok-soft),var(--wash) 50%,var(--bad-soft));border:1px solid var(--rule)}
+.meter i{position:absolute;top:-5px;width:4px;height:20px;background:var(--ink);border-radius:2px;transition:left .3s;transform:translateX(-2px)}
+.meter-l{display:flex;justify-content:space-between;font-family:var(--f-mono);font-size:11.5px;color:var(--muted)}
+
+/* pnh */
+.pnh-steps{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--rule);border-radius:8px;overflow:hidden}
+.pnh-steps button{font-family:var(--f-display);font-size:15px;background:var(--sheet);color:var(--muted);border:0;border-right:1px solid var(--rule);padding:12px 8px;cursor:pointer}
+.pnh-steps button:last-child{border-right:0}
+.pnh-steps button.on{background:var(--nerve-soft);color:var(--ink);font-weight:600}
+.feat{list-style:none;padding:0;display:grid;gap:8px}
+.feat li{display:flex;gap:10px;align-items:baseline;padding-left:0;transition:opacity .25s}
+.feat li::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--nerve);flex:none;transform:translateY(-1px)}
+.feat li.off{opacity:.25}
+.feat li.off::before{background:var(--rule)}
+.abbar{height:10px;border-radius:5px;background:var(--wash);overflow:hidden;border:1px solid var(--rule)}
+.abbar i{display:block;height:100%;background:var(--nerve);transition:width .4s}
+
+/* process */
+.proc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:20px;counter-reset:p}
+@media (max-width:760px){.proc{grid-template-columns:1fr 1fr}}
+@media (max-width:440px){.proc{grid-template-columns:1fr}}
+.proc > div{border-top:2px solid var(--ink);padding-top:12px;display:grid;gap:6px;font-size:16px;align-content:start}
+.proc > div::before{counter-increment:p;content:counter(p);font-family:var(--f-mono);font-size:12px;color:var(--faint)}
+.proc b{font-family:var(--f-display)}
+.ladder{display:grid}
+.rung{display:grid;grid-template-columns:150px minmax(0,1fr);gap:20px;padding:14px 0;border-top:1px solid var(--rule);font-size:16.5px}
+.rung > span{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding-top:4px}
+@media (max-width:560px){.rung{grid-template-columns:1fr;gap:4px}}
+.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+@media (max-width:760px){.three{grid-template-columns:1fr}}
+.three > div{display:grid;gap:10px;align-content:start;font-size:16px}
+
+/* quiz */
+.quiz{background:var(--sheet);border:1px solid var(--rule);border-radius:10px;padding:24px;display:grid;gap:18px}
+.qtop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.qtext{font-family:var(--f-display);font-size:22px;font-weight:600;line-height:1.3}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;font-family:var(--f-body);font-size:17px;background:var(--paper);color:var(--ink);border:1px solid var(--rule);border-radius:6px;padding:12px 14px;cursor:pointer}
+.opt:hover:not([disabled]){border-color:var(--ink)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.why{font-size:16.5px;border-left:2px solid var(--ink);padding-left:14px}
+.qnav{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+.pips{display:flex;gap:4px;flex-wrap:wrap}
+.pips i{width:10px;height:10px;border-radius:2px;background:var(--rule);display:block}
+.pips i.r{background:var(--ok)} .pips i.w{background:var(--bad)} .pips i.c{outline:1.5px solid var(--ink);outline-offset:1px}
+
+.refs{display:grid;gap:12px;font-size:16.5px}
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--rule);font-size:14.5px;color:var(--muted);display:grid;gap:8px}
+
+@media (prefers-reduced-motion: reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<nav class="chips" aria-label="Sections">
+  <a href="#ontology">Map</a><a href="#machinery">Machinery</a><a href="#ruler">EMG ruler</a><a href="#myotonia">Myotonia</a><a href="#rippling">Rippling</a><a href="#brody">Brody</a><a href="#contracture">Contracture</a><a href="#cramps">Cramps</a><a href="#fasc">Fasciculations</a><a href="#myokymia">Myokymia</a><a href="#pnh">PNH</a><a href="#tetany">Tetany</a><a href="#quiz">Quiz</a><a href="#refs">Sources</a>
+</nav>
+
+<div class="shell">
+<aside class="idx" aria-label="Index">
+  <div class="grp"><span>Frame</span><a href="#top">Thesis</a><a href="#ontology">Ontology</a><a href="#machinery">Machinery</a><a href="#ruler">EMG ruler</a></div>
+  <div class="grp"><span class="muscle">Myogenic</span><a class="m" href="#myotonia">Myotonia</a><a class="m" href="#rippling">Rippling muscle</a><a class="m" href="#brody">Brody disease</a><a class="m" href="#contracture">Contracture</a></div>
+  <div class="grp"><span class="nerve">Neurogenic</span><a class="n" href="#cramps">Cramps</a><a class="n" href="#fasc">Fasciculations</a><a class="n" href="#myokymia">Myokymia</a><a class="n" href="#pnh">PNH spectrum</a><a class="n" href="#tetany">Tetany</a></div>
+  <div class="grp"><span>Consolidate</span><a href="#quiz">Quiz</a><a href="#refs">Sources</a></div>
+</aside>
+
+<main>
+
+<header class="hero" id="top">
+  <div class="eyebrow">Study atlas · EURO-NMD Basics webinar</div>
+  <h1>Muscle hyperexcitability &amp; cramps</h1>
+  <svg class="trace-hero" viewBox="0 0 800 64" preserveAspectRatio="none" aria-hidden="true"><line x1="0" y1="32" x2="800" y2="32"/><path id="heroTrace" d="M0 32H800"/></svg>
+  <p class="lede">Every phenomenon in this field can be placed on three axes: <b>where</b> it starts, <b>what the EMG hears</b>, and <b>why</b> it happens. Learn the axes and the individual diseases fall into place.</p>
+  <div class="src">
+    <span>Dr Federica Montagnese · Friedrich-Baur-Institut, LMU Munich</span>
+    <a href="https://youtu.be/Do0uAotLGow" target="_blank" rel="noopener">Watch the talk (62 min) ↗</a>
+  </div>
+  <div class="legend">
+    <span><span class="tag n">nerve</span> neurogenic, presynaptic</span>
+    <span><span class="tag m">muscle</span> myogenic, postsynaptic</span>
+    <span><span class="bg">bg</span> background added, not stated in the talk</span>
+    <span><span class="t">12:20</span> jumps to that moment of the video</span>
+  </div>
+</header>
+
+<section style="padding-top:8px">
+  <div class="sec-head"><div class="eyebrow">The thesis in five lines</div></div>
+  <ol class="thesis">
+    <li><div><b>Two compartments.</b>Hyperexcitability starts either in the motor nerve or in the muscle fibre. Each side has its own repertoire of signs.</div></li>
+    <li><div><b>The EMG is the first fork.</b>On the muscle side, only myotonia produces discharges. Rippling, Brody stiffness and contractures are electrically silent.</div></li>
+    <li><div><b>Same sign, different meaning.</b>Cramps and fasciculations are usually benign. A few features mark the ones that signal disease.</div></li>
+    <li><div><b>History, an extended exam and EMG</b> usually make the diagnosis. The routine exam needs additions: test for myotonia, rippling, the warm-up phenomenon and fasciculations.</div></li>
+    <li><div><b>Most of these conditions can be treated</b>, and an accurate label lets you reassure the patient or give a real prognosis.</div></li>
+  </ol>
+</section>
+
+<!-- ========== ONTOLOGY ========== -->
+<div class="part" id="ontology"><span class="num">Part I</span><h2>The ontology</h2><p>Two axes to hang everything on.</p></div>
+
+<section style="padding-top:40px">
+  <div class="sec-head">
+    <div class="eyebrow">Axis 1 · Where</div>
+    <h3>One motor unit, nine places to misfire</h3>
+  </div>
+  <div class="explain">
+    <ul>
+      <li><b>Presynaptic</b>: motor neuron soma, axon, distal terminals. The source of cramps, fasciculations, myokymia, neuromyotonia and tetany.</li>
+      <li><b>Synaptic</b>: the neuromuscular junction. Rarely the culprit; Schwartz–Jampel is the example.</li>
+      <li><b>Postsynaptic</b>: membrane channels, caveolae, calcium release and reuptake, energy supply. The source of myotonia, rippling, Brody stiffness and contractures.</li>
+    </ul>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Tap a station</h4><span class="lbl">spinal cord → filaments</span></div>
+    <div class="scroll-x">
+      <svg id="originSvg" viewBox="0 0 960 236" style="min-width:740px;width:100%;display:block" role="group" aria-label="Motor unit origin map">
+        <text x="20" y="22" font-size="12" fill="var(--nerve)" font-weight="600" letter-spacing="1">NERVE · PRESYNAPTIC</text>
+        <text x="940" y="22" font-size="12" fill="var(--muscle)" font-weight="600" letter-spacing="1" text-anchor="end">MUSCLE · POSTSYNAPTIC</text>
+        <line x1="418" y1="34" x2="418" y2="214" stroke="var(--bound)" stroke-dasharray="3 4"/>
+        <text x="418" y="230" font-size="10" fill="var(--bound)" text-anchor="middle">synapse</text>
+        <path class="wire" d="M70 120 H900"/>
+      </svg>
+    </div>
+    <div id="originDetail" class="origin-detail" aria-live="polite"></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <div class="eyebrow">Axis 2 · Sign → EMG → Cause</div>
+    <h3>Three layers of the same phenomenon</h3>
+  </div>
+  <div class="explain">
+    <ul>
+      <li>What you <b>see</b> at the bedside is not the diagnosis.</li>
+      <li>What the needle <b>hears</b> narrows it.</li>
+      <li>The <b>cause</b> (gene, antibody, metabolic state) is where treatment and prognosis come from.</li>
+    </ul>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Tap any item to trace its chain</h4><button class="btn" id="layClear">Clear</button></div>
+    <div class="layers" id="layers">
+      <svg class="links" id="layLinks" aria-hidden="true"></svg>
+      <div class="lcols">
+        <div class="lcol" data-l="0"><div class="k">Clinical sign</div></div>
+        <div class="lcol" data-l="1"><div class="k">EMG signature</div></div>
+        <div class="lcol" data-l="2"><div class="k">Cause</div></div>
+      </div>
+    </div>
+    <p class="cap">Tap <b>Silent</b> in the middle column to see how many different conditions share one negative EMG.</p>
+  </div>
+</section>
+
+<!-- ========== MACHINERY ========== -->
+<div class="part" id="machinery"><span class="num">Part II</span><h2>The machinery</h2><p>Excitation–contraction coupling, read as a list of failure points. <a class="t" href="https://youtu.be/Do0uAotLGow?t=170" target="_blank" rel="noopener">2:50</a></p></div>
+
+<section style="padding-top:40px">
+  <div class="explain">
+    <ul>
+      <li>Skeletal muscle has three properties: <b>excitability</b>, <b>contractility</b>, <b>extensibility</b>.</li>
+      <li>Hyperexcitability syndromes come from disorders of the first two.</li>
+      <li>Four levels can fail: ion channels, the DHPR–RyR1 coupling, ATP supply, and Ca²⁺ reuptake.</li>
+    </ul>
+  </div>
+  <div class="widget">
+    <div class="ecc" id="eccBox" data-step="1">
+      <svg viewBox="0 0 420 300" aria-label="Muscle fibre schematic">
+        <text class="l" x="12" y="22">sarcolemma</text>
+        <path class="memb" d="M10 40 H180 V120 H240 V40 H410"/>
+        <text class="l" x="246" y="100">T-tubule</text>
+        <circle class="ap ap1" cx="40" cy="40" r="7"/><circle class="ap ap2" cx="130" cy="40" r="7"/><circle class="ap ap3" cx="180" cy="100" r="7"/>
+        <rect x="168" y="106" width="14" height="14" fill="var(--nerve)" rx="2"/><text class="l" x="120" y="138">DHPR</text>
+        <rect class="sr" x="60" y="128" width="300" height="40" rx="18"/>
+        <text class="l" x="70" y="186">sarcoplasmic reticulum · Ca²⁺ store</text>
+        <rect x="182" y="124" width="12" height="10" fill="var(--muscle)" rx="2"/><text class="l" x="200" y="146">RyR1</text>
+        <rect x="320" y="124" width="12" height="10" fill="var(--bound)" rx="2"/><text class="l" x="300" y="122" text-anchor="end">SERCA1</text>
+        <rect class="hl hl-dhpr" x="160" y="98" width="30" height="30" rx="4"/><rect class="hl hl-ryr" x="176" y="118" width="24" height="22" rx="4"/><rect class="hl hl-serca" x="312" y="116" width="28" height="26" rx="4"/>
+        <g class="ca"><circle cx="110" cy="148" r="4"/><circle cx="140" cy="140" r="4"/><circle cx="170" cy="152" r="4"/><circle cx="220" cy="142" r="4"/><circle cx="250" cy="154" r="4"/><circle cx="280" cy="144" r="4"/><circle cx="125" cy="158" r="4"/><circle cx="235" cy="160" r="4"/></g>
+        <line class="act" x1="40" y1="240" x2="230" y2="240"/><line class="act" x1="200" y1="280" x2="390" y2="280"/>
+        <line class="myo" x1="110" y1="260" x2="320" y2="260"/>
+        <g class="xb"><line x1="130" y1="256" x2="138" y2="244"/><line x1="160" y1="256" x2="168" y2="244"/><line x1="190" y1="256" x2="198" y2="244"/><line x1="230" y1="264" x2="238" y2="276"/><line x1="260" y1="264" x2="268" y2="276"/><line x1="290" y1="264" x2="298" y2="276"/></g>
+        <text class="l" x="12" y="232">actin</text><text class="l" x="330" y="263">myosin</text>
+        <rect class="hl hl-atp" x="100" y="232" width="230" height="56" rx="6"/>
+        <text class="l" x="12" y="296">ATP releases the cross-bridges</text>
+      </svg>
+      <div style="display:grid;gap:14px">
+        <div class="btns"><button class="btn" id="eccPrev" aria-label="Previous step">←</button><button class="btn primary" id="eccPlay">Play</button><button class="btn" id="eccNext" aria-label="Next step">→</button><div class="dots" id="eccDots" aria-hidden="true"></div></div>
+        <div class="step-card" id="eccCard" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="ruler">
+  <div class="sec-head">
+    <div class="eyebrow">Reference</div>
+    <h3>The EMG ruler: firing rate tells discharges apart</h3>
+  </div>
+  <div class="explain">
+    <ul>
+      <li>Several discharges look alike on screen. <b>Rate</b> and <b>rhythm</b> separate them.</li>
+      <li>Myotonic and neuromyotonic discharges can sound similar. The neuromyotonic one fires much faster.</li>
+      <li>The ranges are approximate textbook values<span class="bg" title="Standard EMG glossary values, not given in the talk">bg</span>. The talk gives the qualitative descriptions.</li>
+    </ul>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Tap a band</h4><span class="lbl">log scale · Hz</span></div>
+    <div class="scroll-x"><svg id="rulerSvg" viewBox="0 0 760 250" style="min-width:600px;width:100%;display:block" aria-label="Firing-rate ruler"></svg></div>
+    <div class="ruler-detail" id="rulerDetail" aria-live="polite"></div>
+  </div>
+</section>
+
+<!-- ========== MYOGENIC ========== -->
+<div class="part"><span class="num muscle">Part III</span><h2>Myogenic</h2><p>The fibre itself misbehaves. One loud entity, three silent ones.</p></div>
+
+<section id="myotonia">
+  <div class="entity">
+    <div class="entity-head"><h3>Myotonia</h3><span class="tag m">loud on EMG</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=483" target="_blank" rel="noopener">8:03</a></div>
+    <p class="def">Delayed relaxation after a voluntary contraction or after percussion.</p>
+    <dl class="facets">
+      <div><dt>Mechanism</dt><dd><ul>
+        <li>Na⁺ or Cl⁻ channel dysfunction.</li>
+        <li>The membrane depolarises too easily, or repolarises too poorly.</li>
+        <li>Result: repetitive action potentials after the stimulus has ended.</li>
+      </ul></dd></div>
+    </dl>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Lower the chloride conductance</h4><span class="lbl" id="gclOut">gCl 100%</span></div>
+    <input type="range" id="gcl" min="10" max="100" value="100" step="5" aria-label="Chloride conductance">
+    <canvas id="vmCanvas" style="width:100%;height:150px;display:block;background:var(--sheet);border:1px solid var(--rule);border-radius:6px"></canvas>
+    <p class="cap">One stimulus at the start. As Cl⁻ conductance falls, the fibre keeps firing by itself. The threshold in this model is illustrative, not a measured value. Cl⁻ carries most of the resting conductance of muscle (about 70–80%)<span class="bg" title="Standard physiology, not stated in the talk">bg</span>, so losing it removes the brake on depolarisation. During activity K⁺ accumulates in the T-tubules; without the Cl⁻ shunt this depolarises the fibre back to threshold<span class="bg" title="Standard physiology (Adrian & Bryant), not stated in the talk">bg</span>.</p>
+  </div>
+  <dl class="facets">
+    <div><dt>Bedside</dt><dd><ul>
+      <li><b>Grip</b>: make a fist or shake hands; the hand opens slowly.</li>
+      <li><b>Percussion</b>: tap the thenar eminence; the thumb stays adducted.</li>
+      <li><b>14-step test</b>: repeated stair climbing reveals leg myotonia.</li>
+      <li><b>Tongue</b> myotonia and <b>lid lag</b>: look up for a few seconds, then quickly down; the lid trails. Typical of Na⁺-channel myotonia.</li>
+      <li><b>Warm-up</b>: myotonia eases with repetition. Named in the talk's summary.</li>
+      <li><b>Paradoxical myotonia</b>: worsens with repetition and with cold. Points to SCN4A paramyotonia<span class="bg" title="Standard teaching, not stated in the talk">bg</span>.</li>
+    </ul></dd></div>
+    <div><dt>EMG</dt><dd><ul>
+      <li><b>Myotonic runs</b>: sustained rhythmic discharges of single muscle fibres.</li>
+      <li>Rate and amplitude <b>wax and wane</b>: a dive bomber, or a motorbike revving.</li>
+      <li>Runs are often incomplete: only waxing, or only waning.</li>
+      <li>Short exercise and cooling tests (Fournier patterns) help separate CLCN1 from SCN4A myotonia<span class="bg" title="Standard neurophysiology, not stated in the talk">bg</span>.</li>
+    </ul></dd></div>
+  </dl>
+  <div class="widget">
+    <div class="w-head"><h4>Real or mimic? Listen to both</h4><a class="t" href="https://youtu.be/Do0uAotLGow?t=703" target="_blank" rel="noopener">11:43</a></div>
+    <div class="emg-pair">
+      <div><span class="lbl">Myotonic run · waxes and wanes</span><div class="emg" data-p="myo" data-h="90"></div></div>
+      <div><span class="lbl">Pseudomyotonic (HFD) · abrupt, flat</span><div class="emg" data-p="pseudo" data-h="90"></div></div>
+    </div>
+    <p class="cap">High-frequency discharges start and stop suddenly with constant rate and amplitude. Seen in Pompe disease, other glycogen storage diseases and necrotising myopathies. They do not mean a myotonic syndrome. Sounds are synthesised from each pattern's rules, not recorded from patients.</p>
+  </div>
+  <dl class="facets">
+    <div><dt>Causes</dt><dd><ul>
+      <li><b>Primary channelopathy</b> (non-dystrophic myotonia): mutations in the Na⁺ (SCN4A) or Cl⁻ (CLCN1) channel genes.</li>
+      <li><b>Secondary channelopathy</b> (myotonic dystrophy DM1, DM2): RNA missplicing of targets such as CLCN1 produces dysfunctional channel isoforms.</li>
+    </ul></dd></div>
+  </dl>
+  <div class="widget">
+    <div class="w-head"><h4>Sort the features: dystrophic or non-dystrophic?</h4><span class="lbl" id="sortScore"></span></div>
+    <div class="sort" id="sorter"></div>
+    <button class="btn" id="sortReset" style="justify-self:start">Reset</button>
+  </div>
+  <dl class="facets">
+    <div><dt>Test</dt><dd><ul>
+      <li>Non-dystrophic: <b>multigene panel</b>.</li>
+      <li>Dystrophic: <b>Southern blot</b> or a repeat-specific test. DM1 and DM2 are repeat expansions, which a normal panel misses.</li>
+    </ul></dd></div>
+    <div><dt>Treat</dt><dd><ul>
+      <li>The myotonia itself is treatable.</li>
+      <li>First choices: <b>mexiletine</b> or <b>lamotrigine</b>. Both are effective, with different side-effect profiles.</li>
+      <li>Mexiletine is the only approved anti-myotonic drug (in the EU, for non-dystrophic myotonia<span class="bg" title="Approval scope added">bg</span>); others are off-label.</li>
+      <li>Newer drugs are reserved for refractory cases.</li>
+    </ul></dd></div>
+  </dl>
+</section>
+
+<section id="rippling">
+  <div class="entity">
+    <div class="entity-head"><h3>Rippling muscle disease</h3><span class="tag m">silent</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=1151" target="_blank" rel="noopener">19:11</a></div>
+    <p class="def">Waves rolling under the skin after a stretch or a light tap. A caveolinopathy. In bodybuilding videos it is called "alien gains".</p>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Provoke the three signs</h4><div class="btns"><button class="btn" id="ripStretch">Stretch</button><button class="btn" id="ripTap">Tap</button></div></div>
+    <svg class="muscle-svg" id="ripSvg" viewBox="0 0 600 150" aria-label="Muscle under the skin"></svg>
+    <div class="status" id="ripStatus" aria-live="polite">Stretch shows rippling. Tap shows a rapid contraction, then a mound.</div>
+  </div>
+  <dl class="facets">
+    <div><dt>Signs</dt><dd><ul>
+      <li><b>Rippling</b> (harp phenomenon): waves after stretch or slight percussion.</li>
+      <li><b>PIRC</b>, percussion-induced rapid contraction: hard to tell from percussion myotonia by eye. The EMG settles it.</li>
+      <li><b>PIMM</b>, percussion-induced muscle mounding (myoedema): a focal tonic lump. Also seen in hypothyroidism.</li>
+    </ul></dd></div>
+    <div><dt>Mechanism</dt><dd><ul>
+      <li>Caveolae are flask-shaped membrane pits built from <b>caveolin-3</b> (the muscle isoform) and <b>cavins 1–4</b>.</li>
+      <li>A membrane reservoir that opens on stretch: the visible wave.</li>
+      <li>They organise T-tubules and modulate RyR, and so intracellular Ca²⁺.</li>
+      <li>They help hold the resting potential through K⁺ channels.</li>
+      <li>They bind the dystrophin–glycoprotein complex and help cluster ACh receptors at the NMJ.</li>
+    </ul></dd></div>
+    <div><dt>Causes</dt><dd><ul>
+      <li><b>CAV3</b>: RMD, but also LGMD (formerly 1C), isolated hyperCKaemia, a pseudometabolic picture (exercise intolerance, myalgia, rhabdomyolysis), distal myopathy, isolated cardiac disease.</li>
+      <li><b>CAVIN1</b>: secondary caveolin-3 deficiency; rippling with lipodystrophy and glucose intolerance.</li>
+      <li><b>Acquired</b>: linked to myasthenia or thymoma; can respond to immunotherapy.</li>
+    </ul></dd></div>
+    <div><dt>Test</dt><dd><ul>
+      <li>CAV3, then CAVIN1.</li>
+      <li>If no mutation is found: <b>cavin-4 IgG</b> (Milone group).</li>
+    </ul></dd></div>
+  </dl>
+</section>
+
+<section id="brody">
+  <div class="entity">
+    <div class="entity-head"><h3>Brody disease</h3><span class="tag m">silent</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=1650" target="_blank" rel="noopener">27:30</a></div>
+    <p class="def">Stiffness after sudden, fast exercise, because calcium is not pumped back into the sarcoplasmic reticulum.</p>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Cytosolic Ca²⁺ after one burst</h4><div class="btns"><button class="btn sel" data-brody="0">Normal SERCA1</button><button class="btn" data-brody="1">SERCA1 deficient</button></div></div>
+    <svg class="muscle-svg" id="brodySvg" viewBox="0 0 600 190" aria-label="Calcium decay curve"></svg>
+    <div class="status" id="brodyStatus"></div>
+  </div>
+  <dl class="facets">
+    <div><dt>Mechanism</dt><dd><ul>
+      <li>SERCA1 (gene <b>ATP2A1</b>) deficiency, mainly in type 2 fibres.</li>
+      <li>Cytosolic Ca²⁺ stays high, so the fibre stays contracted.</li>
+      <li>The gene was found partly by studying "pseudomyotonia" in Romagnola cattle.</li>
+    </ul></dd></div>
+    <div><dt>Clinical</dt><dd><ul>
+      <li>Very rare, autosomal recessive, starts in childhood.</li>
+      <li>Stiffness on phasic exercise, with myalgia, contractures and mild weakness.</li>
+      <li>Some cases of malignant hyperthermia under general anaesthesia.</li>
+    </ul></dd></div>
+    <div><dt>EMG</dt><dd><ul><li>No discharges: a silent contracture.</li></ul></dd></div>
+    <div><dt>Test</dt><dd><ul>
+      <li>ATP2A1 sequencing.</li>
+      <li>For a variant of uncertain significance: show SERCA activity and expression in muscle (immunohistochemistry, immunoblot).</li>
+    </ul></dd></div>
+    <div><dt>Relatives</dt><dd><ul><li><b>Calcium-related myopathies</b>: myalgia, cramps and contractures are possible, but weakness usually dominates.</li></ul></dd></div>
+  </dl>
+</section>
+
+<section id="contracture">
+  <div class="entity">
+    <div class="entity-head"><h3>Contracture</h3><span class="tag m">silent</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=1858" target="_blank" rel="noopener">30:58</a></div>
+    <p class="def">A hard, shortened muscle that cannot release because there is not enough ATP to break the cross-bridges. The same mechanism as rigor mortis.</p>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Same pain, opposite physiology: stretch both</h4><div class="btns"><button class="btn primary" id="ccStretch">Stretch</button><button class="btn" id="ccReset">Reset</button></div></div>
+    <div class="emg-pair">
+      <div><span class="lbl nerve">Cramp · neurogenic</span><svg class="muscle-svg" id="ccCrampM" viewBox="0 0 300 60"></svg><canvas id="ccCrampE" style="width:100%;height:70px;display:block;border:1px solid var(--rule);border-radius:6px"></canvas><div class="status" id="ccCrampS"></div></div>
+      <div><span class="lbl muscle">Contracture · myogenic</span><svg class="muscle-svg" id="ccContM" viewBox="0 0 300 60"></svg><canvas id="ccContE" style="width:100%;height:70px;display:block;border:1px solid var(--rule);border-radius:6px"></canvas><div class="status" id="ccContS"></div></div>
+    </div>
+  </div>
+  <div class="tbl"><table>
+    <thead><tr><th></th><th>Contracture</th><th>Cramp</th></tr></thead>
+    <tbody>
+      <tr><td>Origin</td><td class="muscle">Muscle: ATP deficit</td><td class="nerve">Nerve: distal terminals</td></tr>
+      <tr><td>Duration</td><td>Longer</td><td>Transient</td></tr>
+      <tr><td>Stretching</td><td><b>Avoid</b>: it adds damage</td><td>Relieves it</td></tr>
+      <tr><td>EMG</td><td>Silent</td><td>Dense interference</td></tr>
+      <tr><td>Think of</td><td>Metabolic myopathy, e.g. McArdle</td><td>Physiological, idiopathic, or symptomatic</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ========== NEUROGENIC ========== -->
+<div class="part"><span class="num nerve">Part IV</span><h2>Neurogenic</h2><p>The motor nerve fires by itself. <a class="t" href="https://youtu.be/Do0uAotLGow?t=1962" target="_blank" rel="noopener">32:42</a></p></div>
+
+<section style="padding-top:40px">
+  <div class="explain">
+    <ul>
+      <li>Activity can start at the <b>soma</b> of the lower motor neuron, along the <b>axon</b>, in its <b>distal terminals</b>, or at presynaptic voltage-gated <b>K⁺ channels</b>.</li>
+      <li>The four classic signs: <b>cramps</b>, <b>fasciculations</b>, <b>myokymia</b>, and the muscle spasms of <b>tetany</b>.</li>
+      <li>Terminology: "spasm" strictly means involuntary contraction of <i>central</i> origin, as in spasticity or multiple sclerosis.</li>
+      <li>Each of these can be benign or idiopathic, or a sign of neuromuscular disease.</li>
+    </ul>
+  </div>
+</section>
+
+<section id="cramps">
+  <div class="entity">
+    <div class="entity-head"><h3>Muscle cramps</h3><span class="tag n">dense interference</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=2073" target="_blank" rel="noopener">34:33</a></div>
+    <p class="def">Sudden, very painful, supramaximal contraction. Transient, and relieved by stretching. Reported by about 37% of the general population, more with age.</p>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Inside a cramp: motor-unit recruitment</h4><span class="lbl">each row = one motor unit</span></div>
+    <div class="emg" data-p="cramp" data-h="170" data-mode="raster"></div>
+    <div class="emg" data-p="cramp" data-h="80"></div>
+    <p class="cap">Units are recruited progressively and fire faster, then drop out slowly. Fasciculations or high-frequency discharges can appear just before or after.</p>
+  </div>
+  <dl class="facets">
+    <div><dt>Clinical</dt><dd><ul>
+      <li>Sudden onset, very painful.</li>
+      <li>Supramaximal contraction, transient.</li>
+      <li>Stretching relieves it.</li>
+      <li>Post-cramp pain is common, probably local hypoxic and metabolic injury.</li>
+    </ul></dd></div>
+    <div><dt>Origin</dt><dd><ul>
+      <li>Still debated.</li>
+      <li>Most experiments point to the <b>distal motor nerve terminals</b>.</li>
+      <li>The spinal cord modulates it: activating the antagonist helps, and the H-reflex changes after a cramp.</li>
+    </ul></dd></div>
+  </dl>
+  <div class="three">
+    <div><span class="tag n">Physiological</span><ul><li>An expected response to extreme conditions: intense exercise, severe electrolyte imbalance.</li><li>Mostly distal muscles.</li><li>Benign, not progressive.</li></ul></div>
+    <div><span class="tag x">Idiopathic</span><ul><li>More frequent than physiological cramps.</li><li>Nocturnal cramps; benign cramp-fasciculation syndrome.</li><li>Benign, not progressive.</li></ul></div>
+    <div><span class="tag m">Symptomatic</span><ul><li>A warning sign of disease.</li><li>Motor neuron disease, neuropathy, plexopathy, radiculopathy, myopathy.</li></ul></div>
+  </div>
+  <dl class="facets">
+    <div><dt>Non-neuro causes</dt><dd><ul><li>Electrolyte disturbances</li><li>Medications</li><li>Pregnancy</li><li>Endocrine disease</li><li>Liver or kidney dysfunction</li></ul></dd></div>
+  </dl>
+  <div style="display:grid;gap:14px">
+    <div class="k">Work-up</div>
+    <div class="proc">
+      <div><b>History</b><span>Frequency, muscles involved, new medications, consistent triggers or relievers.</span></div>
+      <div><b>Examination</b><span>Red flags of a neuromuscular disease.</span></div>
+      <div><b>Labs</b><span>Exclude non-neurological causes. Rarely revealing.</span></div>
+      <div><b>EMG / NCS</b><span>When neuromuscular disease is suspected; it guides what comes next.</span></div>
+    </div>
+  </div>
+  <div style="display:grid;gap:6px">
+    <div class="k">Treatment, as ranked in the talk <a class="t" href="https://youtu.be/Do0uAotLGow?t=2476" target="_blank" rel="noopener">41:16</a></div>
+    <div class="ladder">
+      <div class="rung"><span>No drugs</span><div><ul><li>Hydration; avoid triggers; stop suspect medications.</li><li>Regular stretching protocols. A Cochrane review suggests less severity, not fewer cramps.</li></ul></div></div>
+      <div class="rung"><span>Best evidence</span><div><ul><li><b>Vitamin B complex</b>, <b>diltiazem</b>.</li><li>Trial each for at least two weeks.</li><li>The 2010 AAN review also lists naftidrofuryl (Level C)<span class="bg" title="Not stated in the talk">bg</span>.</li></ul></div></div>
+      <div class="rung"><span>Not first line</span><div><ul><li><b>Quinine</b>: effective, but risks arrhythmia, allergic reactions and haemolytic-uraemic syndrome.</li></ul></div></div>
+      <div class="rung"><span>Some patients</span><div><ul><li>Magnesium (evidence doubtful).</li><li>Pickle juice or other acetic-acid drinks.</li><li>Gabapentin, pregabalin.</li></ul></div></div>
+      <div class="rung"><span>ALS</span><div><ul><li><b>Mexiletine</b> reduced cramps in a clinical trial.</li></ul></div></div>
+    </div>
+    <p class="muted" style="font-size:15.5px;margin-top:8px">The evidence base is thin. The last evidence-based review of cramp treatment dates from 2010.</p>
+  </div>
+</section>
+
+<section id="fasc">
+  <div class="entity">
+    <div class="entity-head"><h3>Fasciculations</h3><span class="tag n">popcorn</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=2682" target="_blank" rel="noopener">44:42</a></div>
+    <p class="def">Brief twitches that recur sporadically and wander across the muscle belly.</p>
+  </div>
+  <dl class="facets">
+    <div><dt>EMG</dt><dd><ul>
+      <li>Spontaneous, random, irregular discharges of single motor units.</li>
+      <li>Variable waveform from one discharge to the next.</li>
+      <li>Muscle ultrasound detects them well. The talk recommends Nens van Alfen's EAN lecture.</li>
+    </ul></dd></div>
+  </dl>
+  <div class="widget">
+    <div class="w-head"><h4>Listen: irregular pops</h4></div>
+    <div class="emg" data-p="fasc" data-h="90"></div>
+  </div>
+  <dl class="facets">
+    <div><dt>Origin</dt><dd><ul>
+      <li>Debated.</li>
+      <li>In early ALS: probably the soma of the lower motor neuron.</li>
+      <li>As denervation progresses: more distal, with nodal hyperexcitability in the axon and terminals.</li>
+    </ul></dd></div>
+    <div><dt>Benign</dt><dd><ul><li>After exercise, mostly calves and lower limbs.</li><li>Cramp-fasciculation syndrome.</li><li>Anxiety.</li></ul></dd></div>
+    <div><dt>Symptomatic</dt><dd><ul><li>Motor neuron disease: ALS (tongue), Kennedy disease (perioral, on speaking).</li><li>PNH, multifocal motor neuropathy, plexopathy, radiculopathy.</li><li>In ALS, fasciculation potentials alongside chronic neurogenic change count as evidence of ongoing denervation (Awaji criteria)<span class="bg" title="Not stated in the talk">bg</span>.</li></ul></dd></div>
+  </dl>
+  <div class="widget">
+    <div class="w-head"><h4>Which way do the clues lean?</h4><span class="lbl">teaching aid, not a validated score</span></div>
+    <div class="checks" id="fascChecks"></div>
+    <div class="meter" aria-hidden="true"><i id="fascMark" style="left:50%"></i></div>
+    <div class="meter-l"><span>leans benign</span><span>leans disease</span></div>
+    <p class="cap" id="fascText"></p>
+  </div>
+</section>
+
+<section id="myokymia">
+  <div class="entity">
+    <div class="entity-head"><h3>Myokymia</h3><span class="tag n">marching soldiers</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=2988" target="_blank" rel="noopener">49:48</a></div>
+    <p class="def">Continuous, undulating movement under the skin, "like worms". A fasciculation that never stops.</p>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>One unit, regular bursts</h4></div>
+    <div class="emg" data-p="myok" data-h="90"></div>
+    <div class="emg" data-p="myok" data-h="60" data-mode="raster"></div>
+  </div>
+  <dl class="facets">
+    <div><dt>EMG</dt><dd><ul><li>Bursts of 3–6 spikes from a single motor unit, at a uniform rate.</li><li>The bursts repeat regularly and sound like marching soldiers.</li></ul></dd></div>
+    <div><dt>Focal</dt><dd><ul><li>Eyelid myokymia, e.g. after sleep deprivation.</li><li>Facial muscles.</li><li>Post-radiation, e.g. one side of the tongue.</li><li>Facial myokymia also suggests MS, a brainstem lesion or Guillain–Barré<span class="bg" title="Standard teaching, not stated in the talk">bg</span>.</li><li>Limb myokymia in a previously irradiated plexus favours radiation plexopathy over tumour infiltration<span class="bg" title="Standard teaching, not stated in the talk">bg</span>.</li></ul></dd></div>
+    <div><dt>Generalised</dt><dd><ul><li>Think peripheral nerve hyperexcitability (next).</li></ul></dd></div>
+  </dl>
+  <div class="callout">
+    <div class="k">Case from the talk</div>
+    <ul>
+      <li>Young patient, five years of continuous twitching.</li>
+      <li>Hyperhidrosis and diarrhoea.</li>
+      <li>Worm-like movements in the calves, thighs and small foot muscles; calf hypertrophy.</li>
+      <li>EMG: myokymic discharges and fasciculations; no neuromyotonic discharges or triplets.</li>
+      <li>CASPR2 weakly positive. Very good response to immunotherapy (steroids).</li>
+    </ul>
+  </div>
+</section>
+
+<section id="pnh">
+  <div class="entity">
+    <div class="entity-head"><h3>Peripheral nerve hyperexcitability</h3><span class="tag n">spectrum</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=3166" target="_blank" rel="noopener">52:46</a></div>
+    <p class="def">Three syndromes on one clinical spectrum. The further along, the more systems involved and the likelier antibodies are.</p>
+  </div>
+  <div class="widget">
+    <div class="w-head"><h4>Move along the spectrum</h4></div>
+    <div class="pnh-steps" id="pnhSteps"><button data-i="0">Cramp-fasciculation</button><button data-i="1">Isaacs</button><button data-i="2">Morvan</button></div>
+    <ul class="feat" id="pnhFeat"></ul>
+    <div style="display:grid;gap:6px"><span class="lbl">Likelihood of VGKC-complex antibodies (qualitative)</span><div class="abbar"><i id="pnhAb"></i></div></div>
+  </div>
+  <dl class="facets">
+    <div><dt>Antibodies</dt><dd><ul><li>Against the VGKC complex: <b>CASPR2</b> more often than <b>LGI1</b>.</li><li>Can be paraneoplastic or occur with other autoimmune disease.</li><li>Ask for CASPR2 and LGI1 specifically: VGKC-complex positivity without either has little clinical meaning<span class="bg" title="Current consensus, not stated in the talk">bg</span>.</li></ul></dd></div>
+    <div><dt>EMG</dt><dd><ul>
+      <li>Myokymic discharges and fasciculations.</li>
+      <li><b>Neuromyotonic discharges</b>: rarely captured. They can resemble myotonic discharges, but fire much faster (about 150–250 Hz<span class="bg" title="Standard EMG glossary range; the figure in the auto-captions is garbled">bg</span>) with a "pinging" sound.</li>
+    </ul></dd></div>
+  </dl>
+  <div class="widget">
+    <div class="w-head"><h4>Neuromyotonic discharge · "pinging"</h4><a class="t" href="https://youtu.be/Do0uAotLGow?t=3233" target="_blank" rel="noopener">53:53</a></div>
+    <div class="emg" data-p="nmt" data-h="90"></div>
+  </div>
+  <dl class="facets">
+    <div><dt>Treat</dt><dd><ul><li>Acquired PNH is treatable.</li><li>Mild: symptomatic drugs.</li><li>Immunosuppression: steroids.</li><li>Refractory: rituximab.</li></ul></dd></div>
+    <div><dt>Hereditary</dt><dd><ul>
+      <li><b>Episodic ataxia type 1</b>: episodic ataxia plus myokymia, especially facial. Gene: KCNA1 (Kv1.1)<span class="bg" title="Gene name added">bg</span>.</li>
+      <li><b>Neonatal-onset epilepsy with myokymia</b>: linked to a centrally expressed K⁺ channel, KCNQ2<span class="bg" title="Gene name added; the talk does not name it">bg</span>.</li>
+      <li><b>HINT1 neuropathy</b>: early, severe axonal neuropathy with neuromyotonic discharges.</li>
+      <li><b>Schwartz–Jampel</b> (perlecan, HSPG2): generalised hypertrophy, stiffness, blepharophimosis, bone deformities. Both myotonic and neuromyotonic discharges. Perlecan clusters acetylcholinesterase, so its loss may leave more ACh in the cleft; it may also affect Na⁺/Cl⁻ channels. <a class="t" href="https://youtu.be/Do0uAotLGow?t=3367" target="_blank" rel="noopener">56:07</a></li>
+    </ul></dd></div>
+  </dl>
+</section>
+
+<section id="tetany">
+  <div class="entity">
+    <div class="entity-head"><h3>Tetany</h3><span class="tag n">doublets</span><a class="t" href="https://youtu.be/Do0uAotLGow?t=3473" target="_blank" rel="noopener">57:53</a></div>
+    <p class="def">Hyperexcitability of nerve, both peripheral and central, caused by low plasma calcium. More common than the rare syndromes above.</p>
+  </div>
+  <dl class="facets">
+    <div><dt>Mechanism</dt><dd><ul><li>Low Ca²⁺ increases Na⁺-channel permeability.</li><li>The nerve membrane depolarises more easily.</li><li>Hypomagnesaemia and alkalosis (e.g. hyperventilation) produce the same picture<span class="bg" title="Not stated in the talk">bg</span>.</li></ul></dd></div>
+    <div><dt>Bedside</dt><dd><ul><li><b>Trousseau</b>: ischaemia from a cuff produces the "obstetric hand".</li><li><b>Chvostek</b>: tapping the facial nerve makes the face twitch. Low specificity: also positive in some healthy people<span class="bg" title="Not stated in the talk">bg</span>.</li></ul></dd></div>
+    <div><dt>EMG</dt><dd><ul><li>Doublets, triplets, multiplets, e.g. recorded during a Trousseau manoeuvre.</li><li>Not specific: also seen in PNH and other states of nerve hyperexcitability<span class="bg" title="Not stated in the talk">bg</span>.</li></ul></dd></div>
+  </dl>
+  <div class="widget">
+    <div class="w-head"><h4>Doublets</h4></div>
+    <div class="emg" data-p="doub" data-h="90"></div>
+  </div>
+</section>
+
+<!-- ========== CONSOLIDATE ========== -->
+<div class="part"><span class="num">Part V</span><h2>Consolidate</h2><p>Retrieval beats rereading.</p></div>
+
+<section id="quiz" style="padding-top:40px">
+  <div class="quiz" id="quizBox"></div>
+</section>
+
+<section id="refs">
+  <div class="sec-head"><div class="eyebrow">Sources</div><h3>Go deeper</h3></div>
+  <ul class="refs">
+    <li><b>The talk</b>: Montagnese F. <i>Muscle hyperexcitability and cramps.</i> EURO-NMD Basics Series, 2023. <a href="https://youtu.be/Do0uAotLGow" target="_blank" rel="noopener">YouTube ↗</a></li>
+    <li><b>Cramp treatment review</b>: Katzberg HD et al. Assessment: symptomatic treatment for muscle cramps (an evidence-based review). <i>Neurology</i> 2010. <a href="https://pubmed.ncbi.nlm.nih.gov/?term=Katzberg+symptomatic+treatment+muscle+cramps+evidence-based+review" target="_blank" rel="noopener">PubMed ↗</a></li>
+    <li><b>Non-drug therapies for cramps</b>: Cochrane review. <a href="https://pubmed.ncbi.nlm.nih.gov/?term=cochrane+non-drug+therapies+lower+limb+muscle+cramps" target="_blank" rel="noopener">PubMed ↗</a></li>
+    <li><b>Quinine for cramps</b>: Cochrane review. <a href="https://pubmed.ncbi.nlm.nih.gov/?term=cochrane+quinine+for+muscle+cramps" target="_blank" rel="noopener">PubMed ↗</a></li>
+    <li><b>Cavin-4 IgG</b> in acquired rippling muscle disease. <a href="https://pubmed.ncbi.nlm.nih.gov/?term=cavin-4+IgG+rippling+muscle" target="_blank" rel="noopener">PubMed ↗</a></li>
+    <li><b>Mexiletine for cramps in ALS</b>. <a href="https://pubmed.ncbi.nlm.nih.gov/?term=mexiletine+muscle+cramps+amyotrophic+lateral+sclerosis+trial" target="_blank" rel="noopener">PubMed ↗</a></li>
+    <li><b>Muscle ultrasound for fasciculations</b>: van Alfen N. <a href="https://pubmed.ncbi.nlm.nih.gov/?term=van+Alfen+muscle+ultrasound+fasciculations" target="_blank" rel="noopener">PubMed ↗</a></li>
+    <li><b>Networks</b>: <a href="https://ern-euro-nmd.eu/" target="_blank" rel="noopener">EURO-NMD ↗</a> · <a href="https://www.ean.org/" target="_blank" rel="noopener">EAN ↗</a></li>
+  </ul>
+  <footer>
+    <p>Study notes from a clinical webinar. Not medical advice.</p>
+    <p>Auto-caption errors were corrected (CASPR2, LGI1, HINT1, lid lag). Items marked <span class="bg">bg</span> are standard background, not claims from the talk. EMG sounds are synthesised from each pattern's textbook rules.</p>
+  </footer>
+</section>
+
+</main>
+</div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const store={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const yt=s=>`https://youtu.be/Do0uAotLGow?t=${s}`;
+const mmss=s=>`${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+const NS='http://www.w3.org/2000/svg';
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ===== EMG engine ===== */
+const SR=16000;
+function rng(seed){let s=seed>>>0;return()=>((s=(s*1664525+1013904223)>>>0)/4294967296)}
+const hat=x=>(1-x*x)*Math.exp(-x*x/2);
+function addSpike(buf,t0,a,shape){
+  const w=shape==='fiber'?0.00028:shape==='poly'?0.0006:0.0007;
+  const parts=shape==='poly'?[[0,1],[0.0016,-0.7],[0.0031,0.55],[0.0046,-0.35]]:[[0,1]];
+  for(const [off,k] of parts){const c=t0+off,i0=Math.max(0,Math.floor((c-6*w)*SR)),i1=Math.min(buf.length-1,Math.ceil((c+6*w)*SR));for(let i=i0;i<=i1;i++)buf[i]+=a*k*hat((i/SR-c)/w)}
+}
+const PAT={
+ myo:{dur:3,side:'m',ev(){const e=[];let t=.15;while(t<2.9){const p=(t-.15)/2.75;const rate=p<.25?30+60*p/.25:90-70*(p-.25)/.75;const a=p<.3?.4+.6*p/.3:1-.75*(p-.3)/.7;e.push({t,a,s:'fiber',u:0});t+=1/rate}return e}},
+ pseudo:{dur:3,side:'m',ev(){const e=[];for(let t=.45;t<2.4;t+=1/40)[[0,.7],[.0035,-.45],[.0072,.55],[.011,-.3]].forEach(([d,a])=>e.push({t:t+d,a,s:'fiber',u:0}));return e}},
+ cramp:{dur:3.2,side:'n',ev(){const r=rng(7),e=[];for(let k=0;k<16;k++){const on=.1+.07*k+r()*.05,off=3.05-.06*k-r()*.08,amp=.2+r()*.45;let t=on;while(t<off){const p=(t-on)/(off-on);e.push({t,a:amp,s:'mu',u:k});t+=1/(8+24*Math.sin(Math.PI*p))*(.9+r()*.2)}}return e}},
+ fasc:{dur:3,side:'n',ev(){const r=rng(3);return [[.35,1],[1.22,.75],[1.68,.95],[2.55,.85]].map(([t,a],i)=>({t:t+r()*.05,a:a*(r()>.5?1:-1),s:'poly',u:i}))}},
+ myok:{dur:3,side:'n',ev(){const e=[];for(let s=.2;s<2.9;s+=.62)for(let k=0;k<5;k++)e.push({t:s+k/32,a:.8,s:'mu',u:0});return e}},
+ nmt:{dur:2.6,side:'n',ev(){const e=[];for(const [s,f] of [[.2,.95],[1.45,2.2]]){let t=s;while(t<f){const p=(t-s)/(f-s);e.push({t,a:1-.6*p,s:'mu',u:0});t+=1/(240-60*p)}}return e}},
+ doub:{dur:3,side:'n',ev(){const e=[];for(let t=.2;t<2.9;t+=1/6){e.push({t,a:.8,s:'mu',u:0});e.push({t:t+.012,a:.75,s:'mu',u:0})}return e}},
+ silent:{dur:3,side:'m',ev(){return[]}}
+};
+function build(p){
+  if(p.buf)return p; p.events=p.ev(); const b=new Float32Array(Math.floor(p.dur*SR));
+  p.events.forEach(e=>addSpike(b,e.t,e.a,e.s));
+  let m=0;for(const v of b)m=Math.max(m,Math.abs(v)); const r=rng(11),k=m>0?.85/m:0;
+  for(let i=0;i<b.length;i++)b[i]=b[i]*k+(r()-.5)*.025; p.buf=b; p.units=p.events.reduce((a,e)=>Math.max(a,e.u+1),1); return p;
+}
+function fit(cv){const dpr=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight;if(!W)return null;if(cv.width!==Math.round(W*dpr)||cv.height!==Math.round(H*dpr)){cv.width=Math.round(W*dpr);cv.height=Math.round(H*dpr)}const c=cv.getContext('2d');c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,W,H);return{c,W,H}}
+function grid(c,W,H,dur){c.strokeStyle=css('--grid');c.lineWidth=1;for(let i=0;i<=dur*5;i++){const x=i*W/(dur*5);c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke()}}
+function drawTrace(cv,buf,dur,color,head,gain=1){
+  const f=fit(cv);if(!f)return;const{c,W,H}=f;grid(c,W,H,dur);
+  c.strokeStyle=css('--rule');c.beginPath();c.moveTo(0,H/2);c.lineTo(W,H/2);c.stroke();
+  c.strokeStyle=color;c.lineWidth=1.1;c.beginPath();const per=buf.length/W;
+  for(let x=0;x<W;x++){let lo=1,hi=-1;for(let i=Math.floor(x*per);i<Math.floor((x+1)*per);i++){const v=buf[i]*(typeof gain==='function'?gain(i/SR):gain);if(v<lo)lo=v;if(v>hi)hi=v}c.moveTo(x+.5,H/2-hi*H*.46);c.lineTo(x+.5,H/2-lo*H*.46+.6)}
+  c.stroke(); if(head!=null){c.fillStyle=css('--ink');c.fillRect(head*W,0,1.5,H)}
+}
+function drawRaster(cv,p,head){
+  const f=fit(cv);if(!f)return;const{c,W,H}=f;grid(c,W,H,p.dur);
+  const rows=p.units,rh=H/rows;c.fillStyle=css(p.side==='n'?'--nerve':'--muscle');
+  p.events.forEach(e=>{const x=e.t/p.dur*W;c.globalAlpha=(head!=null&&e.t/p.dur>head)?.25:1;c.fillRect(x,e.u*rh+rh*.18,1.4,rh*.64)});
+  c.globalAlpha=1; if(head!=null){c.fillStyle=css('--ink');c.fillRect(head*W,0,1.5,H)}
+}
+let actx=null,playing=null;
+function play(w){
+  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)()}catch(e){return}
+  if(playing){try{playing.src.stop()}catch(e){} const pw=playing.w;playing=null;pw.group.forEach(x=>{x.btn&&(x.btn.textContent='▶ play');x.draw()}); if(pw===w)return}
+  const p=w.p,ab=actx.createBuffer(1,p.buf.length,SR);ab.copyToChannel(p.buf,0);
+  const src=actx.createBufferSource();src.buffer=ab;const g=actx.createGain();g.gain.value=.6;src.connect(g).connect(actx.destination);
+  if(actx.state==='suspended')actx.resume();
+  const t0=actx.currentTime;src.start();playing={w,src};w.group.forEach(x=>x.btn&&(x.btn.textContent='■ stop'));
+  src.onended=()=>{if(playing&&playing.src===src){playing=null;w.group.forEach(x=>{x.btn&&(x.btn.textContent='▶ play');x.draw()})}};
+  const tick=()=>{if(!playing||playing.src!==src)return;const h=Math.min(1,(actx.currentTime-t0)/p.dur);w.group.forEach(x=>x.draw(h));requestAnimationFrame(tick)};tick();
+}
+const widgets=[];
+$$('.emg').forEach(el=>{
+  const p=build(PAT[el.dataset.p]),mode=el.dataset.mode||'trace';
+  el.innerHTML=`<canvas style="height:${el.dataset.h||90}px" aria-label="${el.dataset.p} ${mode}; tap to play"></canvas>${mode==='trace'?'<button class="play" type="button">▶ play</button>':''}`;
+  const cv=el.querySelector('canvas');
+  widgets.push({p,el,cv,btn:el.querySelector('.play'),draw:h=>mode==='raster'?drawRaster(cv,p,h):drawTrace(cv,p.buf,p.dur,css(p.side==='n'?'--nerve':'--muscle'),h)});
+});
+// widgets of the same pattern inside one block play and animate together
+widgets.forEach(w=>{w.group=widgets.filter(x=>x.p===w.p&&x.el.parentElement===w.el.parentElement);w.lead=w.group.find(x=>x.btn)||w;w.lead.group=w.group});
+widgets.forEach(w=>{const go=()=>play(w.lead);w.cv.addEventListener('click',go);w.btn&&w.btn.addEventListener('click',go)});
+
+/* hero */
+(()=>{const b=build(PAT.myo).buf,W=800,per=b.length/W;let d='';for(let x=0;x<W;x++){let lo=1,hi=-1;for(let i=Math.floor(x*per);i<Math.floor((x+1)*per);i++){if(b[i]<lo)lo=b[i];if(b[i]>hi)hi=b[i]}d+=`M${x} ${32-hi*28}L${x} ${32-lo*28}`}$('#heroTrace').setAttribute('d',d)})();
+
+/* ===== Origin map ===== */
+const ORIG=[
+ {side:'n',l1:'Motor neuron',l2:'soma',t:1962,title:'Lower motor neuron soma',what:['Fasciculations in early ALS probably start here.','Spinal circuits modulate cramps.'],dx:'ALS, Kennedy disease, other motor neuron diseases'},
+ {side:'n',l1:'Motor',l2:'axon',t:3166,title:'Motor axon',what:['Myokymia, neuromyotonia, fasciculations.','In later ALS, fasciculations shift distally (nodal hyperexcitability).'],dx:'PNH, multifocal motor neuropathy, plexopathy, radiculopathy, post-radiation'},
+ {side:'n',l1:'Distal',l2:'terminals',t:2196,title:'Distal terminals and presynaptic K⁺ channels',what:['Main proposed origin of cramps.','VGKC-complex antibodies (CASPR2, LGI1) cause PNH.','Low Ca²⁺ makes Na⁺ channels leaky: tetany.'],dx:'Cramps, cramp-fasciculation syndrome, Isaacs, Morvan, hypocalcaemia, episodic ataxia type 1'},
+ {side:'x',l1:'Neuromuscular',l2:'junction',t:3367,title:'Neuromuscular junction',what:['Perlecan anchors acetylcholinesterase; without it more ACh may remain in the cleft.'],dx:'Schwartz–Jampel syndrome'},
+ {side:'m',l1:'Na⁺ / Cl⁻',l2:'channels',t:483,title:'Sarcolemmal ion channels',what:['The membrane depolarises too easily or repolarises poorly: myotonia.','The only myogenic sign that is loud on EMG.'],dx:'Non-dystrophic myotonias (CLCN1, SCN4A); DM1 and DM2 through missplicing'},
+ {side:'m',l1:'Caveolae',l2:'',t:1335,title:'Caveolae',what:['A membrane reservoir that unfolds on stretch: rippling.'],dx:'CAV3, CAVIN1, acquired cavin-4 IgG'},
+ {side:'m',l1:'DHPR → RyR1',l2:'Ca²⁺ release',t:376,title:'DHPR–RyR1 coupling',what:['Abnormal coupling disturbs Ca²⁺ release.'],dx:'Calcium-related myopathies'},
+ {side:'m',l1:'SERCA1',l2:'Ca²⁺ reuptake',t:1650,title:'Ca²⁺ reuptake',what:['Ca²⁺ stays high, so the fibre stays stiff after sudden effort.'],dx:'Brody disease (ATP2A1)'},
+ {side:'m',l1:'Cross-bridges',l2:'ATP',t:1858,title:'Actin–myosin cross-bridges',what:['Without ATP the cross-bridges cannot release: contracture.'],dx:'Metabolic myopathies such as McArdle'}
+];
+const pos=[70,172,274,418,520,614,708,804,900],osvg=$('#originSvg');
+ORIG.forEach((o,i)=>{const g=document.createElementNS(NS,'g');g.setAttribute('class',`node ${o.side}`);g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',o.title);
+  const x=pos[i],w=96,h=58,y=i%2?132:52;
+  g.innerHTML=`<line class="wire" x1="${x}" y1="120" x2="${x}" y2="${i%2?y:y+h}"/><rect x="${x-w/2}" y="${y}" width="${w}" height="${h}" rx="6"/><text class="num" x="${x}" y="${y+16}">${i+1}</text><text x="${x}" y="${y+33}">${o.l1}</text><text x="${x}" y="${y+47}">${o.l2}</text>`;
+  g.addEventListener('click',()=>pick(i));g.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick(i)}});osvg.appendChild(g);o.el=g});
+function pick(i){const o=ORIG[i];ORIG.forEach(x=>x.el.classList.toggle('on',x===o));const d=$('#originDetail');d.className=`origin-detail ${o.side}`;
+  d.innerHTML=`<div class="eyebrow">${i+1} · ${{n:'Nerve',m:'Muscle',x:'Synapse'}[o.side]}</div><h4 style="font-size:20px">${o.title}</h4><ul>${o.what.map(w=>`<li>${w}</li>`).join('')}<li><b>Diagnoses:</b> ${o.dx} <a class="t" href="${yt(o.t)}" target="_blank" rel="noopener">${mmss(o.t)}</a></li></ul>`;store.set('hx.origin',i)}
+pick(store.get('hx.origin',4));
+
+/* ===== Three-layer graph ===== */
+const NODES=[
+ ['myotonia',0,'Myotonia','m'],['ripple',0,'Rippling · PIRC','m'],['mound',0,'Mounding (myoedema)','m'],['stiff',0,'Stiffness after sudden effort','m'],['contr',0,'Contracture','m'],['cramp',0,'Cramp','n'],['fasc',0,'Fasciculation','n'],['myok',0,'Myokymia','n'],['cma',0,'Continuous muscle activity','n'],['tet',0,'Tetanic spasm','n'],['none',0,'No visible sign','x'],
+ ['myoR',1,'Myotonic runs','m'],['silent',1,'Silent','m'],['pseudo',1,'Pseudomyotonic HFD','m'],['interf',1,'Dense interference','n'],['fascP',1,'Fasciculation potentials','n'],['myokD',1,'Myokymic discharges','n'],['nmtD',1,'Neuromyotonic discharges','n'],['doub',1,'Doublets / multiplets','n'],
+ ['ndm',2,'Non-dystrophic myotonia','m'],['dm',2,'Myotonic dystrophy 1/2','m'],['cav',2,'Caveolinopathy','m'],['hypot',2,'Hypothyroidism','x'],['brody',2,'Brody disease','m'],['metab',2,'Metabolic myopathy','m'],['pompe',2,'Pompe, necrotising myopathy','m'],['phys',2,'Physiological / idiopathic','x'],['mnd',2,'Motor neuron disease','n'],['neuro',2,'Neuropathy, radiculo-, plexopathy','n'],['pnh',2,'Autoimmune PNH','n'],['hered',2,'Hereditary PNH (EA1, HINT1, SJS)','n'],['hypoca',2,'Hypocalcaemia','x']
+];
+const TRI=[['myotonia','myoR','ndm'],['myotonia','myoR','dm'],['myotonia','myoR','hered'],['ripple','silent','cav'],['mound','silent','cav'],['mound','silent','hypot'],['stiff','silent','brody'],['contr','silent','metab'],
+ ['cramp','interf','phys'],['cramp','interf','mnd'],['cramp','interf','neuro'],['cramp','interf','pnh'],['fasc','fascP','phys'],['fasc','fascP','mnd'],['fasc','fascP','neuro'],['fasc','fascP','pnh'],
+ ['myok','myokD','pnh'],['myok','myokD','hered'],['myok','myokD','neuro'],['cma','nmtD','pnh'],['cma','nmtD','hered'],['tet','doub','hypoca'],['cma','doub','pnh'],['none','pseudo','pompe']];
+const chip={},cols=$$('.lcol');
+NODES.forEach(([id,l,label,s])=>{const b=document.createElement('button');b.className=`chip ${s}`;b.textContent=label;b.type='button';b.onclick=()=>focusNode(id);cols[l].appendChild(b);chip[id]=b});
+const EDGES=[];TRI.forEach(([a,b,c])=>{[[a,b],[b,c]].forEach(([x,y])=>{if(!EDGES.some(e=>e.a===x&&e.b===y))EDGES.push({a:x,b:y})})});
+const links=$('#layLinks'),lay=$('#layers');
+function drawLinks(){
+  const box=lay.getBoundingClientRect();links.innerHTML='';
+  EDGES.forEach(e=>{const A=chip[e.a].getBoundingClientRect(),B=chip[e.b].getBoundingClientRect();
+    const x1=A.right-box.left,y1=A.top+A.height/2-box.top,x2=B.left-box.left,y2=B.top+B.height/2-box.top,mx=(x1+x2)/2;
+    const p=document.createElementNS(NS,'path');p.setAttribute('d',`M${x1} ${y1}C${mx} ${y1} ${mx} ${y2} ${x2} ${y2}`);e.el=p;links.appendChild(p)});
+  applyFocus();
+}
+let focused=null;
+function focusNode(id){focused=focused===id?null:id;applyFocus()}
+function applyFocus(){
+  lay.classList.toggle('focus',!!focused);Object.values(chip).forEach(c=>c.classList.remove('hot','sel'));EDGES.forEach(e=>e.el&&e.el.classList.remove('hot'));
+  if(!focused)return;
+  TRI.filter(t=>t.includes(focused)).forEach(([a,b,c])=>{[a,b,c].forEach(n=>chip[n].classList.add('hot'));EDGES.forEach(e=>{if((e.a===a&&e.b===b)||(e.a===b&&e.b===c))e.el&&e.el.classList.add('hot')})});
+  chip[focused].classList.add('sel');
+}
+$('#layClear').onclick=()=>{focused=null;applyFocus()};
+
+/* ===== ECC ===== */
+const ECC=[
+ {h:'The nerve impulse arrives',p:'At the end plate, acetylcholine depolarises the sarcolemma.',b:'Nerve side: an overexcitable nerve (PNH, tetany) sends extra impulses.'},
+ {h:'An action potential spreads',p:'Na⁺ channels open; Cl⁻ conductance steadies the membrane afterwards.',b:'Myotonia: failing Na⁺ or Cl⁻ channels let the fibre keep firing.'},
+ {h:'Down the T-tubules',p:'The wave dives inward. The DHPR senses the voltage change.',b:'Caveolae shape the T-tubules: caveolinopathy (rippling).'},
+ {h:'RyR1 releases calcium',p:'DHPR opens RyR1 and stored Ca²⁺ floods out of the SR.',b:'Faulty DHPR–RyR1 coupling: calcium-related myopathies.'},
+ {h:'Cross-bridges form',p:'Ca²⁺ moves troponin, exposing binding sites; myosin binds actin.',b:'This is the contraction itself.'},
+ {h:'ATP lets go',p:'Each cross-bridge needs ATP to release and cycle again.',b:'Contracture: no ATP, no release. Silent EMG (McArdle, rigor mortis).'},
+ {h:'SERCA pumps calcium back',p:'Ca²⁺ returns to the SR and the fibre relaxes.',b:'Brody disease: SERCA1 deficient, the fibre stays stiff.'}
+];
+let step=1,timer=null;const dots=$('#eccDots');dots.innerHTML=ECC.map(()=>'<span></span>').join('');
+function show(s){step=(s+ECC.length-1)%ECC.length+1;$('#eccBox').dataset.step=step;const e=ECC[step-1];
+  $('#eccCard').innerHTML=`<div class="eyebrow">Step ${step} of ${ECC.length}</div><h4 style="font-size:20px">${e.h}</h4><p>${e.p}</p><p class="breaks"><b>If it breaks:</b> ${e.b}</p>`;[...dots.children].forEach((d,i)=>d.classList.toggle('on',i<step))}
+function stop(){clearInterval(timer);timer=null;$('#eccPlay').textContent='Play'}
+$('#eccPrev').onclick=()=>{stop();show(step-1)};$('#eccNext').onclick=()=>{stop();show(step+1)};
+$('#eccPlay').onclick=()=>{if(timer){stop();return}if(step===ECC.length)show(1);$('#eccPlay').textContent='Pause';timer=setInterval(()=>{if(step===ECC.length){stop();return}show(step+1)},2800)};
+show(1);
+
+/* ===== Ruler ===== */
+const BANDS=[
+ {name:'Fasciculation potentials',lo:.1,hi:1,side:'n',p:'fasc',d:'Irregular and random, with intervals of seconds.'},
+ {name:'Myokymic bursts (recurrence)',lo:.2,hi:10,side:'n',p:'myok',d:'Bursts recur in a regular rhythm; within each burst the spikes fire at roughly 5–60 Hz.'},
+ {name:'Complex repetitive / pseudomyotonic',lo:5,hi:100,side:'m',p:'pseudo',d:'Complex, time-locked potentials repeating at a constant rate and amplitude, with abrupt start and stop. Machine-like.'},
+ {name:'Myotonic discharges',lo:20,hi:150,side:'m',p:'myo',d:'Rate and amplitude wax and wane.'},
+ {name:'Neuromyotonic discharges',lo:150,hi:250,side:'n',p:'nmt',d:'Very high rate, often with decrementing amplitude, "pinging". Generated in the nerve, not the muscle.'}
+];
+const rs=$('#rulerSvg'),L=v=>60+(Math.log10(v)-Math.log10(.1))/(Math.log10(300)-Math.log10(.1))*660;
+let rh='';[.1,1,10,100,300].forEach(v=>{rh+=`<line x1="${L(v)}" y1="30" x2="${L(v)}" y2="215" stroke="var(--grid)"/><text x="${L(v)}" y="236" font-size="11" fill="var(--muted)" text-anchor="middle">${v} Hz</text>`});
+rs.innerHTML=rh;
+BANDS.forEach((b,i)=>{const g=document.createElementNS(NS,'g');g.setAttribute('class','band');g.setAttribute('tabindex','0');g.setAttribute('role','button');g.setAttribute('aria-label',b.name);const y=34+i*36,col=b.side==='n'?'nerve':'muscle';
+  g.innerHTML=`<rect x="${L(b.lo)}" y="${y}" width="${Math.max(6,L(b.hi)-L(b.lo))}" height="22" rx="4" fill="var(--${col}-soft)" stroke="var(--${col})"/><text x="${b.lo>50?L(b.lo)-8:L(b.hi)+8}" y="${y+15}" font-size="12" fill="var(--ink)" text-anchor="${b.lo>50?'end':'start'}">${b.name}</text>`;
+  g.onclick=()=>pickBand(i);g.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pickBand(i)}};rs.appendChild(g);b.el=g});
+function pickBand(i){const b=BANDS[i];BANDS.forEach(x=>x.el.classList.toggle('on',x===b));
+  $('#rulerDetail').innerHTML=`<div><span class="tag ${b.side}">${b.side==='n'?'nerve':'muscle'}</span> <b style="font-family:var(--f-display)">${b.name}</b> <span class="mono muted">≈ ${b.lo}–${b.hi} Hz</span></div><p>${b.d}</p><div class="emg" style="max-width:560px"><canvas style="height:64px"></canvas><button class="play" type="button">▶ play</button></div>`;
+  const el=$('#rulerDetail .emg'),p=build(PAT[b.p]),cv=el.querySelector('canvas'),w={p,el,cv,btn:el.querySelector('.play'),draw:h=>drawTrace(cv,p.buf,p.dur,css(p.side==='n'?'--nerve':'--muscle'),h)};w.group=[w];w.draw();
+  const go=()=>play(w);cv.onclick=go;w.btn.onclick=go}
+pickBand(3);
+
+/* ===== Myotonia Vm sim ===== */
+function drawVm(){
+  const g=+$('#gcl').value/100;$('#gclOut').textContent=`gCl ${Math.round(g*100)}%`;
+  const cv=$('#vmCanvas'),f=fit(cv);if(!f)return;const{c,W,H}=f;
+  const T=400,X=t=>10+t/T*(W-20),Y=v=>H-14-(v+90)/130*(H-28);
+  c.strokeStyle=css('--grid');c.lineWidth=1;for(let t=0;t<=T;t+=50){c.beginPath();c.moveTo(X(t),0);c.lineTo(X(t),H);c.stroke()}
+  c.setLineDash([4,4]);c.strokeStyle=css('--faint');c.beginPath();c.moveTo(X(0),Y(-55));c.lineTo(W,Y(-55));c.stroke();c.setLineDash([]);
+  c.fillStyle=css('--muted');c.font=`11px ${css('--f-mono')}`;c.fillText('threshold',X(0)+4,Y(-55)-5);c.fillText(`${T} ms`,W-50,H-3);
+  const n=g>=.55?0:Math.round((.55-g)/.45*24);const spikes=[20];let isi=7;
+  for(let k=1;k<=n;k++){isi+=k<n*.3?-.2:1.1;const t=spikes[k-1]+Math.max(5,isi);if(t>T-10)break;spikes.push(t)}
+  const adp=(1-g)*24;
+  c.strokeStyle=css('--muscle');c.lineWidth=1.4;c.beginPath();c.moveTo(X(0),Y(-80));c.lineTo(X(19),Y(-80));
+  spikes.forEach((t,k)=>{const pk=25-k*1.6;c.lineTo(X(t),Y(-55));c.lineTo(X(t+.6),Y(pk));c.lineTo(X(t+1.6),Y(-82));
+    const next=spikes[k+1];
+    if(next){c.lineTo(X(t+2.6),Y(-80+adp*.6));c.lineTo(X(next),Y(-55))}
+    else{for(let s=2;s<=T-t;s+=4)c.lineTo(X(t+s),Y(-80+adp*.7*Math.exp(-s/(40+120*(1-g)))))}});
+  c.stroke();
+  c.fillStyle=css('--ink');c.fillText(n?`${spikes.length-1} after-discharges`:'single spike, clean relaxation',X(0)+4,14);
+}
+$('#gcl').addEventListener('input',drawVm);
+
+/* ===== DM vs NDM sorter ===== */
+const SORT=[
+ ['Prominent anticipation (DM1)','D'],['Muscle hypertrophy, athletic build','N'],['Cataract, diabetes, heart involvement','D'],['Pure myotonic syndrome','N'],['Weakness and wasting outweigh the myotonia','D'],['Repeat expansion: needs Southern blot','D'],['Found by a multigene panel','N'],['No significant progression','N'],['Secondary channelopathy through missplicing','D'],['Autosomal dominant or recessive','N']
+];
+let sortAns=store.get('hx.sort',{});
+function renderSort(){
+  const box=$('#sorter');box.innerHTML='';let ok=0,done=0;
+  SORT.forEach(([txt,a],i)=>{const g=sortAns[i];if(g){done++;if(g===a)ok++}
+    const r=document.createElement('div');r.className='sort-row'+(g?(g===a?' ok':' no'):'');
+    r.innerHTML=`<span>${txt}${g&&g!==a?` <span class="mono muted">→ ${a==='D'?'dystrophic':'non-dystrophic'}</span>`:''}</span><div class="btns"><button class="btn" data-v="D" ${g?'disabled':''}>DM</button><button class="btn" data-v="N" ${g?'disabled':''}>NDM</button></div>`;
+    r.querySelectorAll('button').forEach(b=>b.onclick=()=>{sortAns[i]=b.dataset.v;store.set('hx.sort',sortAns);renderSort()});box.appendChild(r)});
+  $('#sortScore').textContent=done?`${ok} / ${done} right`:`${SORT.length} features`;
+}
+$('#sortReset').onclick=()=>{sortAns={};store.set('hx.sort',sortAns);renderSort()};renderSort();
+
+/* ===== Rippling ===== */
+const ripSvg=$('#ripSvg');let ripRAF=null;
+function ripDraw(fn){
+  let top='M20 70';for(let x=20;x<=580;x+=4)top+=`L${x} ${70-fn(x)}`;
+  let stripes='';for(let k=1;k<4;k++){let s=`M24 ${70+k*14}`;for(let x=24;x<=576;x+=6)s+=`L${x} ${70+k*14-fn(x)*(1-k/4)}`;stripes+=`<path d="${s}" fill="none" stroke="var(--muscle)" stroke-opacity=".25" stroke-width="1"/>`}
+  ripSvg.innerHTML=`<path d="M10 40 H590" stroke="var(--rule)" stroke-dasharray="2 4"/><text x="12" y="34" font-size="10" fill="var(--faint)">skin</text><path d="${top} L580 130 L20 130 Z" fill="var(--muscle-soft)" stroke="var(--muscle)" stroke-width="1.4"/>${stripes}`;
+}
+ripDraw(()=>0);
+function ripRun(kind){
+  cancelAnimationFrame(ripRAF);const t0=performance.now(),st=$('#ripStatus');
+  if(reduce){ripDraw(kind==='stretch'?x=>9*Math.exp(-((x-300)**2)/4900)*Math.sin((x-300)/14):x=>16*Math.exp(-((x-300)**2)/676));st.textContent=kind==='stretch'?'Rippling: waves roll along the muscle. EMG stays silent.':'Tap: rapid contraction, then a focal mound.';return}
+  const frame=now=>{const t=(now-t0)/1000;let fn;
+    if(kind==='stretch'){const c=20+t*260;fn=x=>{const d=x-c;return 9*Math.exp(-(d*d)/4900)*Math.sin(d/14)};st.textContent='Rippling: waves roll along the muscle (harp phenomenon). EMG stays silent.';if(c>660){ripDraw(()=>0);return}}
+    else{if(t<.18){fn=()=>-3;st.textContent='PIRC: a rapid contraction of the whole segment.'}
+      else{const a=t<.5?(t-.18)/.32:t<2.2?1:Math.max(0,1-(t-2.2)/.8);fn=x=>{const d=x-300;return 16*a*Math.exp(-(d*d)/676)};st.textContent='PIMM: a focal mound that lasts a few seconds. Also seen in hypothyroidism.';if(t>3.1){ripDraw(()=>0);return}}}
+    ripDraw(fn);ripRAF=requestAnimationFrame(frame)};
+  ripRAF=requestAnimationFrame(frame);
+}
+$('#ripStretch').onclick=()=>ripRun('stretch');$('#ripTap').onclick=()=>ripRun('tap');
+
+/* ===== Brody ===== */
+let brodyMode=0;
+function brodyDraw(){
+  const s=$('#brodySvg'),X=t=>50+t*530,Y=v=>160-v*130;
+  const curve=tau=>{let d=`M${X(0)} ${Y(.05)}`;for(let t=0;t<=1.0001;t+=.005){let v=.05;if(t>=.08&&t<.12)v=.05+.95*(t-.08)/.04;else if(t>=.12)v=.05+.95*Math.exp(-(t-.12)/tau);d+=`L${X(t)} ${Y(v)}`}return d};
+  s.innerHTML=`<line x1="50" y1="160" x2="585" y2="160" stroke="var(--rule)"/><line x1="50" y1="25" x2="50" y2="160" stroke="var(--rule)"/>
+   <text x="44" y="32" font-size="10" fill="var(--muted)" text-anchor="end">high</text><text x="44" y="160" font-size="10" fill="var(--muted)" text-anchor="end">rest</text>
+   <text x="585" y="178" font-size="10" fill="var(--muted)" text-anchor="end">time · 1 s</text><text x="${X(.1)}" y="178" font-size="10" fill="var(--muted)" text-anchor="middle">burst</text>
+   <path d="${curve(.035)}" fill="none" stroke="var(--${brodyMode?'faint':'ink'})" stroke-width="${brodyMode?1.2:2}" ${brodyMode?'stroke-dasharray="4 3"':''}/>
+   ${brodyMode?`<path id="bCurve" d="${curve(.32)}" fill="none" stroke="var(--muscle)" stroke-width="2.2"/>`:''}`;
+  const c=$('#bCurve');if(c&&!reduce){const l=c.getTotalLength();c.style.strokeDasharray=l;c.style.strokeDashoffset=l;c.getBoundingClientRect();c.style.transition='stroke-dashoffset 1.6s ease-out';c.style.strokeDashoffset=0}
+  $('#brodyStatus').textContent=brodyMode?'SERCA1 deficient: Ca²⁺ clears slowly, so the fibre stays contracted (dashed = normal). EMG silent.':'Normal: SERCA1 clears Ca²⁺ within milliseconds and the fibre relaxes.';
+}
+$$('[data-brody]').forEach(b=>b.onclick=()=>{brodyMode=+b.dataset.brody;$$('[data-brody]').forEach(x=>x.classList.toggle('sel',x===b));brodyDraw()});
+brodyDraw();
+
+/* ===== Cramp vs contracture ===== */
+let stretched=false;
+function musc(svg,len,col,dash){svg.innerHTML=`<rect x="${150-len/2}" y="16" width="${len}" height="28" rx="14" fill="var(--${col}-soft)" stroke="var(--${col})" stroke-width="1.6" ${dash?'stroke-dasharray="5 3"':''}/><line x1="${150-len/2-14}" y1="30" x2="${150-len/2}" y2="30" stroke="var(--faint)" stroke-width="3"/><line x1="${150+len/2}" y1="30" x2="${150+len/2+14}" y2="30" stroke="var(--faint)" stroke-width="3"/>`}
+function ccDraw(){
+  const cr=build(PAT.cramp),si=build(PAT.silent);
+  musc($('#ccCrampM'),stretched?240:150,'nerve');musc($('#ccContM'),150,'muscle',stretched);
+  drawTrace($('#ccCrampE'),cr.buf,cr.dur,css('--nerve'),null,stretched?(t=>t<.9?1:Math.max(0,1-(t-.9)/.5)):1);
+  drawTrace($('#ccContE'),si.buf,si.dur,css('--muscle'));
+  $('#ccCrampS').textContent=stretched?'Stretch → activity stops, the muscle lengthens.':'Dense interference, muscle shortened.';
+  $('#ccContS').textContent=stretched?'Stretch → no release, risk of more damage.':'EMG silent, muscle shortened.';
+}
+$('#ccStretch').onclick=()=>{stretched=true;ccDraw()};$('#ccReset').onclick=()=>{stretched=false;ccDraw()};
+
+/* ===== Fasciculation meter ===== */
+const FC=[['Bulbar or truncal (tongue, perioral, trunk)',3],['With weakness or wasting',3],['Large, long, complex polyphasic morphology',2],['Frequent',1],['Mostly proximal limb muscles',1],['Only after exercise, in the calves',-2],['Distal limb muscles only',-1],['Anxiety context, normal strength',-2]];
+const fsel=store.get('hx.fasc',[]);
+$('#fascChecks').innerHTML=FC.map(([t],i)=>`<label><input type="checkbox" id="fc${i}" ${fsel.includes(i)?'checked':''}> <span>${t}</span></label>`).join('');
+function fascUpd(){const on=FC.map((_,i)=>$('#fc'+i).checked);store.set('hx.fasc',on.map((v,i)=>v?i:-1).filter(i=>i>=0));
+  const s=FC.reduce((a,[,w],i)=>a+(on[i]?w:0),0),x=Math.max(2,Math.min(98,50+s*6.5));$('#fascMark').style.left=x+'%';
+  $('#fascText').textContent=!on.some(Boolean)?'Tick the features you see.':s>=4?'Leans toward disease. Look for denervation, and examine bulbar and truncal muscles.':s<=-2?'Leans benign. Reassure, and follow up if anything changes.':'Mixed picture. The EMG and the rest of the examination decide.'}
+FC.forEach((_,i)=>$('#fc'+i).addEventListener('change',fascUpd));fascUpd();
+
+/* ===== PNH ===== */
+const PF=[['Cramps',0],['Fasciculations',0],['Myokymia',1],['Neuromyotonia, continuous muscle activity',1],['Autonomic signs: hyperhidrosis',1],['CNS involvement; overlap with limbic encephalitis',2]];
+function pnh(i){$$('#pnhSteps button').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
+  $('#pnhFeat').innerHTML=PF.map(([t,l])=>`<li class="${l>i?'off':''}">${t}</li>`).join('');$('#pnhAb').style.width=[22,58,88][i]+'%'}
+$$('#pnhSteps button').forEach(b=>b.onclick=()=>pnh(+b.dataset.i));pnh(1);
+
+/* ===== Quiz ===== */
+const Q=[
+ {q:'Of the myogenic hyperexcitability signs, which one is NOT silent on EMG?',o:['Myotonia','Rippling','Brody stiffness','Metabolic contracture'],a:0,w:'Only myotonia produces discharges (myotonic runs). The others are electrically silent.'},
+ {q:'A run that starts and stops abruptly at a constant rate and amplitude is most likely…',o:['A myotonic run','A pseudomyotonic high-frequency discharge','A cramp','A myokymic discharge'],a:1,w:'Myotonic runs wax and wane. HFDs are flat and abrupt: Pompe, glycogen storage diseases, necrotising myopathy.'},
+ {q:'The only approved anti-myotonic drug is…',o:['Lamotrigine','Quinine','Mexiletine','Diltiazem'],a:2,w:'Mexiletine. Lamotrigine is first-line in practice but off-label.'},
+ {q:'Why can a standard multigene panel miss myotonic dystrophy?',o:['DM is not genetic','DM1 and DM2 are repeat expansions','The genes are mitochondrial','DM is always de novo'],a:1,w:'Repeat expansions need Southern blot or repeat-specific testing.'},
+ {q:'Lid lag and tongue myotonia point most toward…',o:['DM2','Na⁺-channel myotonia','Brody disease','McArdle disease'],a:1,w:'Facial involvement is most typical of sodium-channel myotonia.'},
+ {q:'Acquired rippling muscle disease is associated with antibodies against…',o:['CASPR2','LGI1','Cavin-4','AChR only'],a:2,w:'Cavin-4 IgG (Milone group). Genetic forms: CAV3, or CAVIN1 with lipodystrophy.'},
+ {q:'Brody disease is a defect of…',o:['Ca²⁺ release by RyR1','Ca²⁺ reuptake by SERCA1','The CLCN1 channel','Glycogen breakdown'],a:1,w:'ATP2A1 / SERCA1. Ca²⁺ stays in the cytosol and the fibre stays stiff after sudden effort.'},
+ {q:'A McArdle patient has a hard, painful, shortened calf during exercise. You should…',o:['Stretch it firmly','Avoid stretching','Give quinine','Tap it to provoke rippling'],a:1,w:'A contracture: stretching adds damage. The EMG is silent.'},
+ {q:'According to the talk, the two cramp drugs with the best evidence are…',o:['Magnesium and quinine','Vitamin B complex and diltiazem','Gabapentin and pregabalin','Lamotrigine and mexiletine'],a:1,w:'Trial each for at least two weeks. Quinine works but carries serious risks.'},
+ {q:'Which fasciculation feature most strongly suggests ALS?',o:['Calf twitching after a run','Bulbar or truncal fasciculations','Distal twitching with anxiety','Eyelid twitching after poor sleep'],a:1,w:'Bulbar and truncal fasciculations are highly suggestive of ALS. So are frequent, proximal, large and complex ones.'},
+ {q:'"Marching soldiers" on EMG means…',o:['Fasciculations','Myokymic discharges','Myotonic runs','Neuromyotonic discharges'],a:1,w:'Bursts of 3–6 spikes from one unit at a uniform rate, repeating regularly.'},
+ {q:'Order the PNH spectrum from mildest to most severe.',o:['Isaacs → Morvan → CFS','CFS → Isaacs → Morvan','Morvan → Isaacs → CFS','Isaacs → CFS → Morvan'],a:1,w:'Cramp-fasciculation syndrome, then Isaacs (autonomic signs), then Morvan (CNS involvement). Antibodies become likelier along the way, CASPR2 more often than LGI1.'},
+ {q:'Neuromyotonic discharges differ from myotonic runs mainly by…',o:['Being silent','A much higher firing rate','Coming from muscle fibres','Occurring only with exercise'],a:1,w:'About 150–250 Hz, "pinging", and generated in the nerve.'},
+ {q:'Doublets and triplets with Trousseau and Chvostek signs suggest…',o:['Hypocalcaemia','Hypothyroidism','Brody disease','DM2'],a:0,w:'Low Ca²⁺ makes Na⁺ channels leakier and nerves hyperexcitable.'},
+ {q:'Schwartz–Jampel syndrome is caused by mutations in…',o:['Caveolin-3','Perlecan (HSPG2)','KCNA1','ATP2A1'],a:1,w:'Perlecan anchors acetylcholinesterase. Both myotonic and neuromyotonic discharges appear.'}
+];
+let qs=store.get('hx.quiz',{i:0,ans:{}});const box=$('#quizBox');
+function qRender(){const i=qs.i,x=Q[i],got=qs.ans[i];const right=Object.entries(qs.ans).filter(([k,v])=>v===Q[k].a).length,done=Object.keys(qs.ans).length;
+  box.innerHTML=`<div class="qtop"><span>Question ${i+1} / ${Q.length}</span><span>${right} correct of ${done}</span></div><div class="qtext">${x.q}</div>
+   <div class="opts">${x.o.map((o,j)=>`<button class="opt ${got!=null?(j===x.a?'right':(j===got?'wrong':'')):''}" data-j="${j}" ${got!=null?'disabled':''}>${o}</button>`).join('')}</div>
+   ${got!=null?`<p class="why"><b>${got===x.a?'Right.':'Not quite.'}</b> ${x.w}</p>`:''}
+   <div class="qnav"><div class="pips">${Q.map((_,k)=>`<i class="${qs.ans[k]==null?'':(qs.ans[k]===Q[k].a?'r':'w')} ${k===i?'c':''}"></i>`).join('')}</div>
+   <div class="btns"><button class="btn" id="qReset">Reset</button><button class="btn" id="qPrev" aria-label="Previous question">←</button><button class="btn primary" id="qNext">${i===Q.length-1?'First':'Next →'}</button></div></div>`;
+  box.querySelectorAll('.opt').forEach(b=>b.onclick=()=>{qs.ans[i]=+b.dataset.j;store.set('hx.quiz',qs);qRender()});
+  $('#qPrev').onclick=()=>{qs.i=(i+Q.length-1)%Q.length;store.set('hx.quiz',qs);qRender()};
+  $('#qNext').onclick=()=>{qs.i=(i+1)%Q.length;store.set('hx.quiz',qs);qRender()};
+  $('#qReset').onclick=()=>{qs={i:0,ans:{}};store.set('hx.quiz',qs);qRender()}}
+qRender();
+
+/* ===== index highlight ===== */
+const idxLinks=$$('aside.idx a');
+const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)idxLinks.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))})},{rootMargin:'-30% 0px -60% 0px'});
+idxLinks.map(a=>document.querySelector(a.getAttribute('href'))).filter(Boolean).forEach(t=>io.observe(t));
+
+/* ===== draw all ===== */
+function redraw(){widgets.forEach(w=>w.draw());drawVm();ccDraw();drawLinks()}
+redraw();addEventListener('resize',redraw);
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(redraw);
+})();
+</script>
